@@ -1,8 +1,26 @@
 FROM nginx
 
 # Install pre-requesites
-RUN apt-get update
-RUN apt-get install -y git-core build-essential python-dev python-virtualenv
+RUN apt-get update && apt-get install -y \
+    avrdude \
+    bash \
+    bluez \
+    build-essential \
+    cron \
+    git-core \
+    gosu \
+    libbluetooth3 \
+    libcap2-bin \
+    python-dev \
+    python-virtualenv \
+    python3-dev \
+    python3-numpy \
+    python3-scipy \
+    python3-venv \
+    python3-zmq \
+    redis-server \
+    wget \
+&& rm -rf /var/lib/apt/lists/*
 
 # Install fermentrack
 RUN git clone https://github.com/thorrak/fermentrack-tools.git fermentrack-tools
