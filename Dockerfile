@@ -24,9 +24,13 @@ RUN apt-get update && apt-get install -y \
 
 # Install fermentrack
 RUN git clone https://github.com/thorrak/fermentrack-tools.git fermentrack-tools
-WORKDIR fermentrack-tools
-RUN install.sh -n; exit 0
+RUN sed -i 's/sudo -u ${fermentrackUser} -H/gosu ${fermentrackUser}/g' fermentrack-tools/install.sh
+#RUN sed -i 's/service nginx restart/service nginx disable/g' fermentrack-tools/install.sh
 RUN sed -i 's:/etc/nginx/sites-available/default-fermentrack:/etc/nginx/conf.d/default.conf:g' fermentrack-tools/install.sh
+RUN bash fermentrack-tools/install.sh -n
+
+# Redirect circusd logs
+RUN ln -sf /dev/stderr /home/fermentrack/fermentrack/log/circusd.log
 
 # Setup persistent storage (mountable directories)
 VOLUME ["/home/fermentrack/fermentrack/data", "/home/fermentrack/fermentrack/collected_static"]
