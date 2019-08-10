@@ -30,7 +30,11 @@ RUN sed -i 's:/etc/nginx/sites-available/default-fermentrack:/etc/nginx/conf.d/d
 RUN bash fermentrack-tools/install.sh -n
 
 # Redirect circusd logs
-RUN ln -sf /dev/stderr /home/fermentrack/fermentrack/log/circusd.log
+RUN sed -i 's:$(circus.env.HOME)/fermentrack/log/circusd.log::g' /home/fermentrack/fermentrack/circus.ini
 
 # Setup persistent storage (mountable directories)
 VOLUME ["/home/fermentrack/fermentrack/data", "/home/fermentrack/fermentrack/collected_static"]
+
+COPY docker_cmd.sh /
+RUN chmod +x /docker_cmd.sh
+CMD /docker_cmd.sh
